@@ -1,6 +1,6 @@
 // this makes it easier to import leaflet with all it's plugins and styles
 // without having to copy all these lines to the top of multiple files
-import L from 'leaflet';
+import L from 'leaflet/dist/leaflet.js';
 
 // plugins
 import './mapsrc/plugins/L.Control.Pan.js'
