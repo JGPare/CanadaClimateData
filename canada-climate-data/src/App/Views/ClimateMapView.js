@@ -70,7 +70,6 @@ export default class ClimateMapView
     }).addTo(this.map);
 
     this.ctlMouseposition = L.control.mousePosition().addTo(this.map);
-    this.ctlPolylinemeasure = L.control.polylineMeasure().addTo(this.map);
     
     this.startDate.val(this.mapViewModel.dataStart)
     this.endDate.val(this.mapViewModel.dataEnd)
