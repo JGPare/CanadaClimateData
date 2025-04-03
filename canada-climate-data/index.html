@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Climate Data Tool</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class="controls-container">
+        <div class="text-center pb-2">
+          <h2>Climate Data Tool</h2>
+        </div>
+
+        <div id="input-block">
+          <div class="input-group">
+            <span>Home</span>
+            <div class="">
+              <input type="text" name="lat" class="control-text coord-text" placeholder="lat" id="home-lat">
+              <input type="text" name="lng" class="control-text coord-text" placeholder="lng" id="home-lng">
+              <button class="set-btn btn" id="set-home-btn">set</button>
+              <button class="set-btn btn" id="go-home-btn">go</button>
+            </div>
+          </div>
+          <div class="input-group">
+            <span>Study Point</span>
+            <div class="">
+              <input type="text" name="lat" class="control-text coord-text" placeholder="lat" id="study-lat">
+              <input type="text" name="lng" class="control-text coord-text" placeholder="lng" id="study-lng">
+              <button class="set-btn btn" id="set-study-btn">set</button>
+              <button class="set-btn btn" id="go-study-btn">go</button>
+            </div>
+          </div>
+          <div class="input-group">
+            <span>Station</span>
+            <div class="">
+              <div>
+                <input readonly type="text" name="lat" class="control-text" placeholder="name" id="station-name">
+              </div>
+              <input readonly type="text" name="lat" class="control-text coord-text" placeholder="lat" id="station-lat">
+              <input readonly type="text" name="lng" class="control-text coord-text" placeholder="lng" id="station-lng">
+            </div>
+          </div>
+          <div class="input-group">
+            <span>Dates</span>
+            <div class="date-container">
+              <div class="date-group">
+                <span class="label-text">from</span>
+                <input type="date" id="start-date" name="start-date">
+              </div>
+            </div>
+            <div class="date-container">
+              <div class="date-group">
+                <span class="label-text">to</span>
+                <input type="date" id="end-date" name="end-date">
+              </div>
+            </div>
+          </div>
+          <div class="input-group">
+            <span>
+              <button id="download-btn" class="btn">download</button>
+            </span>
+          </div>
+        </div>
+        <div id="status-bar" class="pulse-success">
+  
+        </div>
+      </div>
+
+
+      <div id="map-container">
+        <div id="mapdiv"></div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
