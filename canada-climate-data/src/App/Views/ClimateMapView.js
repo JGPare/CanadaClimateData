@@ -1,7 +1,6 @@
 import L from '../Utility/leafletPlugin.js';
 import $ from "jquery";
 
-
 // add this in for conditionals where you may want logging later to debug
 const debug = true
 
