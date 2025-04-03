@@ -8,9 +8,6 @@
 
 
 (function (factory) {
-    if (typeof window.L != 'undefined'){
-      factory(window.L);
-    }
     if (typeof define === 'function' && define.amd) {
         // AMD
         define(['leaflet'], factory);

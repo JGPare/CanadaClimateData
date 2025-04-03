@@ -2,8 +2,6 @@
 // without having to copy all these lines to the top of multiple files
 import L from 'leaflet';
 
-window.L = L
-
 // // plugins
 import './mapsrc/plugins/L.Control.Pan.js'
 import './mapsrc/plugins/L.Control.MousePosition.js'

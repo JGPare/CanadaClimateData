@@ -1,9 +1,6 @@
 (function (factory) {
 	// Packaging/modules magic dance
 	var L;
-  if (typeof window.L != 'undefined'){
-    factory(window.L);
-  }
 	if (typeof define === 'function' && define.amd) {
 		// AMD
 		define(['leaflet'], factory);
