@@ -16,6 +16,7 @@
     "jquery": "^3.7.1",
     "leaflet": "^1.9.4",
     "leaflet.pancontrol": "^1.0.0",
+    "leaflet.zoomslider": "^0.7.1",
     "turf": "^3.0.14"
   }
 }
