@@ -79,6 +79,7 @@ export default class ClimateMapView
 
   addEventHandles()
   {
+    // MAP
     this.map.on('click',(e) => {
       const coords = e.latlng;
       this.mapViewModel.click(coords)
@@ -88,45 +89,7 @@ export default class ClimateMapView
       this.mapViewModel.setZoom(this.getZoom())
     });
 
-    this.mapViewModel.on('addLayer',(layer) => {
-      this.addLayer(layer)
-    })
-    
-    this.mapViewModel.on('removeLayer',(layer) => {
-      this.removeLayer(layer)
-    })
-
-    this.mapViewModel.on('locate', () => {
-      this.map.locate({setView : true})
-    })
-
-    this.mapViewModel.on('gotTo', (params) => {
-      this.goTo(params.lat, params.lng. params.zoom)
-    })
-
-    this.mapViewModel.on('updatedMarkers', () => {
-      const home = this.mapViewModel.home
-      const study = this.mapViewModel.study
-      const station = this.mapViewModel.station
-
-      this.homeLat.val(home ? home.lat.toFixed(4) : 0)
-      this.homeLng.val(home ? home.lng.toFixed(4) : 0)
-      this.stationLat.val(station ? station.lat.toFixed(4) : 0)
-      this.stationLng.val(station ? station.lng.toFixed(4) : 0)
-      this.stationLng.val(station ? station.lng.toFixed(4) : 0)
-      this.studyLat.val(study ? study.lat.toFixed(4) : 0)
-      this.studyLng.val(study ? study.lng.toFixed(4) : 0)
-
-      this.stationName.val(station ? station.name : 0)
-    })
-
-    this.mapViewModel.on('resetBtns', () => {
-      this.setHomeBtn.removeClass('selected-btn')
-      this.setHomeBtn.addClass('btn')
-      this.setStudyBtn.removeClass('selected-btn')
-      this.setStudyBtn.addClass('btn')
-    })
-
+    // PAGE
     this.setHomeBtn.on('click', (e) => {
       this.setHomeBtn.addClass('selected-btn')
       this.setHomeBtn.removeClass('btn')
@@ -150,11 +113,6 @@ export default class ClimateMapView
       this.mapViewModel.downloadData()
     })
 
-    this.mapViewModel.on('goTo', (params) =>
-    {
-      this.goTo(params.lat, params.lng, params.zoom)
-    })
-
     this.startDate.on('change', (e) => {
       this.mapViewModel.dataStart = this.startDate.val()
       console.log(this.mapViewModel.dataStart);
@@ -163,6 +121,67 @@ export default class ClimateMapView
 
     this.endDate.on('change', (e) => {
       this.mapViewModel.dataEnd = this.endDate.val()
+    })
+
+    this.homeLat.on('change', (e) => {
+      this.mapViewModel.home.lat = Number(this.homeLat.val())
+      this.mapViewModel.setHome()
+    })
+    this.homeLng.on('change', (e) => {
+      this.mapViewModel.home.lng = Number(this.homeLng.val())
+      this.mapViewModel.setHome()
+    })
+    this.studyLat.on('change', (e) => {
+      this.mapViewModel.study.lat = Number(this.studyLat.val())
+      this.mapViewModel.setStudy()
+    })
+    this.studyLng.on('change', (e) => {
+      this.mapViewModel.study.lng = Number(this.studyLng.val())
+      this.mapViewModel.setStudy()
+    })
+
+    // VM
+    this.mapViewModel.on('addLayer',(layer) => {
+      this.addLayer(layer)
+    })
+    
+    this.mapViewModel.on('removeLayer',(layer) => {
+      this.removeLayer(layer)
+    })
+
+    this.mapViewModel.on('locate', () => {
+      this.map.locate({setView : true})
+    })
+
+    this.mapViewModel.on('gotTo', (params) => {
+      this.goTo(params.lat, params.lng. params.zoom)
+    })
+
+    this.mapViewModel.on('updatedMarkers', () => {
+      const home = this.mapViewModel.home
+      const study = this.mapViewModel.study
+      const station = this.mapViewModel.station      
+
+      this.homeLat.val(home ? home.lat.toFixed(4) : 0)
+      this.homeLng.val(home ? home.lng.toFixed(4) : 0)
+      this.studyLat.val(study ? study.lat.toFixed(4) : 0)
+      this.studyLng.val(study ? study.lng.toFixed(4) : 0)
+      this.stationLat.val(station ? station.lat.toFixed(4) : 0)
+      this.stationLng.val(station ? station.lng.toFixed(4) : 0)
+
+      this.stationName.val(station ? station.name : 0)
+    })
+
+    this.mapViewModel.on('resetBtns', () => {
+      this.setHomeBtn.removeClass('selected-btn')
+      this.setHomeBtn.addClass('btn')
+      this.setStudyBtn.removeClass('selected-btn')
+      this.setStudyBtn.addClass('btn')
+    })
+
+    this.mapViewModel.on('goTo', (params) =>
+    {
+      this.goTo(params.lat, params.lng, params.zoom)
     })
 
     this.mapViewModel.on('setStatus', () => {

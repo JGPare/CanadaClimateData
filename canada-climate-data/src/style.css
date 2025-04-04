@@ -110,7 +110,7 @@ h1 {
 }
 
 .coord-text {
-  width: 5rem;
+  width: 4rem;
 }
 
 .label-text {
@@ -203,7 +203,6 @@ h1 {
         box-shadow: 0 0 0 0 rgb(234, 245, 81);
     }
     70% {
-        
         box-shadow: 0 0 0 5px rgba(132, 206, 197, 0);
     }
     100% {

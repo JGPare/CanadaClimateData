@@ -50,8 +50,8 @@ export default class ClimateMapViewModel extends EventEmitter
   loaded()
   {
     this.trigger('homeGot')
-    this.homeMarker = this.setHome()
-    this.studyMarker = this.setStudy()
+    this.setHome()
+    this.setStudy()
     this.trigger('updatedMarkers')
   }
 
@@ -73,16 +73,15 @@ export default class ClimateMapViewModel extends EventEmitter
     switch (this.clickMode) {
       case clickModes.setHome:
         this.home = latLng
-        this.homeMarker = this.setHome()
+        this.setHome()
         this.clickMode = defaultClickMode
         this.trigger('resetBtns')
         this.setLocalItem('home',this.home)
         break
       case clickModes.setStudy:
         this.study = latLng
-        this.studyMarker = this.setStudy()
+        this.setStudy()
         this.clickMode = defaultClickMode
-        this.updateStation()
         this.trigger('resetBtns')
         this.setLocalItem('study',this.home)
         break
@@ -93,17 +92,29 @@ export default class ClimateMapViewModel extends EventEmitter
 
   setHome()
   {
-    return this.setMarker(this.home, this.homeMarker, icons.home, () => {
-      this.setLocalItem('home',this.home)
+    this.homeMarker = this.setMarker(this.home, this.homeMarker, icons.home, () => {
+      this.updateHome()
     })
+    this.updateHome()
+  }
+
+  updateHome()
+  {
+    this.setLocalItem('home',this.home)
   }
  
   setStudy()
   {
-    return this.setMarker(this.study, this.studyMarker, icons.study, () => {
-      this.updateStation()
-      this.setLocalItem('study',this.study)
+    this.studyMarker = this.setMarker(this.study, this.studyMarker, icons.study, () => {
+      this.updateStudy()
     })
+    this.updateStudy()
+  }
+
+  updateStudy()
+  {
+    this.updateStation()
+    this.setLocalItem('study',this.study)
   }
 
   setMarker(latLng, marker, icon, callback = null, draggable = true)
