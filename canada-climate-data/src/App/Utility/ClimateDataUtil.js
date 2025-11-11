@@ -27,15 +27,15 @@ export default class ClimateDataUtil
     const distance = turf.distance(inputPoint, stationPoint, { units: "kilometers" });
 
     // Check if this station is closer and not being ignored
-    if (distance < minDistance && !ignoreIdsList.includes(station.id)) {
+    if (distance < minDistance && !ignoreIdsList.includes(station.climateId)) {
       minDistance = distance;
       closestStation = station;
     }
   });
   
-  const stationActive = await this.stationActive(closestStation.id)
+  const stationActive = await this.stationActive(closestStation.climateId)
   if (!stationActive && recurseCount < maxRecurseCount){
-    ignoreIdsList.push(closestStation.id)
+    ignoreIdsList.push(closestStation.climateId)
     recurseCount++
     // use recursion to find active station
     return this.getClosestStation(inputLat, inputLng, ignoreIdsList, recurseCount)
@@ -48,19 +48,19 @@ export default class ClimateDataUtil
   }
 
   // does the station have daily data for the last three years
-  static async stationActive(stationId)
+  static async stationActive(climateId)
   {    
-    const stationData = await this.fetchStationPreviousYears(stationId,3)    
+    const stationData = await this.fetchStationPreviousYears(climateId,3)    
     return stationData.features.length > 0
   }
 
   // start and end date of format YYYY-MM-DD
-  static async getStationDailyRain(stationID, startDate, endDate)
+  static async getStationDailyRain(climateId, startDate, endDate)
   {
     let dailyRain = null
     
     try {
-      const data = await this.fetchWeatherData(stationID, startDate, endDate)
+      const data = await this.fetchWeatherData(climateId, startDate, endDate)
       if (data && data.features) {
         console.log("✅ Weather Data:", data);
       } else {
@@ -75,7 +75,7 @@ export default class ClimateDataUtil
     return dailyRain
   }
 
-  static fetchStationPreviousYears(stationID, years)
+  static fetchStationPreviousYears(climateId, years)
   {
     const endDate = new Date(); // Today's date
     const startDate = new Date();
@@ -84,21 +84,23 @@ export default class ClimateDataUtil
     const startDateString = startDate.toISOString().split('T')[0]
     const endDateString = endDate.toISOString().split('T')[0]
     
-    return this.fetchWeatherData(stationID, startDateString, endDateString);
+    return this.fetchWeatherData(climateId, startDateString, endDateString);
   }
   
   static async getStations()
   {
     // using local storage, should do some cache breaking later
     let stations = JSON.parse(localStorage.getItem('weatherStations'))
-    if (!stations){
+    if (stations){
       console.log("fetching stations");
       
       // Await the fetchStations() call to get the resolved data
       let stationData = await this.fetchStations();
-  
+      console.log(stationData);
+      
       stations = stationData.features.map((feature) => {
         return {
+          climateId : feature.properties.CLIMATE_IDENTIFIER,
           id : feature.properties.STN_ID,
           name : feature.properties.STATION_NAME,
           lng : feature.geometry.coordinates[0],
@@ -111,26 +113,29 @@ export default class ClimateDataUtil
       console.log("stations fetched from local storage");
     }
     this.data.stations = stations
+
+    console.log(stations);
+    
   }
 
-  static async fetchWeatherData(stationID, startDate, endDate) {
+  static async fetchWeatherData(climateId, startDate, endDate) {
     // Base URL for the API
     const baseUrl = "https://api.weather.gc.ca/collections/climate-daily/items";
   
     // Format the URL with provided parameters                                                                                // can | as ID|ID
-    const url = `${baseUrl}?datetime=${startDate}%2000:00:00/${endDate}%2000:00:00&STN_ID=${stationID}&sortby=PROVINCE_CODE,STN_ID,LOCAL_DATE&f=json&limit=150000&startindex=0`;
+    const url = `${baseUrl}?CLIMATE_IDENTIFIER=${climateId}&datetime=${startDate}/${endDate}&sortby=PROVINCE_CODE,STN_ID,LOCAL_DATE&f=json&limit=150000`;
   
     return this.fetchURL(url)
   }
 
-  static async downloadWeatherData(stationID, startDate, endDate) {
+  static async downloadWeatherData(climateId, startDate, endDate) {
     console.log("Download data attempt");
     
     // Base URL for the API
     const baseUrl = "https://api.weather.gc.ca/collections/climate-daily/items";
   
     // Format the URL with provided parameters                                                                                // can | as ID|ID
-    const url = `${baseUrl}?datetime=${startDate}%2000:00:00/${endDate}%2000:00:00&STN_ID=${stationID}&sortby=PROVINCE_CODE,STN_ID,LOCAL_DATE&f=csv&limit=150000&startindex=0`;
+    const url = `${baseUrl}?CLIMATE_IDENTIFIER=${climateId}&datetime=${startDate}/${endDate}&sortby=PROVINCE_CODE,STN_ID,LOCAL_DATE&f=csv&limit=150000`;
   
     return this.fetchDownloadURL(url)
   }
@@ -139,12 +144,12 @@ export default class ClimateDataUtil
   static async fetchStations() {
     // Base URL for the API
 
-    const url = "https://api.weather.gc.ca/collections/climate-stations/items?f=json&limit=10000&PROVINCE_CODE=BC&properties=STATION_NAME,STN_ID,LATITUDE,LONGITUDE";
+    const url = "https://api.weather.gc.ca/collections/climate-stations/items?f=json&limit=10000&PROV_STATE_TERR_CODE=BC&properties=CLIMATE_IDENTIFIER,STATION_NAME,STN_ID,LATITUDE,LONGITUDE";
     return this.fetchURL(url)
   }
 
   static async fetchURL(url)
-  {
+  { 
     try {
       // Make the API request
       const response = await fetch(url);

@@ -208,7 +208,7 @@ export default class ClimateMapViewModel extends EventEmitter
   downloadData()
   {
     if (this.station){
-      ClimateDataUtil.downloadWeatherData(this.station.id,this.dataStart, this.dataEnd)
+      ClimateDataUtil.downloadWeatherData(this.station.climateId,this.dataStart, this.dataEnd)
     }
   }
 
